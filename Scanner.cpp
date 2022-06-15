@@ -57,7 +57,10 @@ int main()
                 yellowToggle = !yellowToggle;
 
                 // Save it to the mat
-                faceScans[0] = img(ROI);
+                // Clone the frame first, otherwise it uses the same image for each scan and overwrites it
+                Mat yellow = img.clone();
+
+                faceScans[0] = yellow(ROI);
             }
         }
 
@@ -70,7 +73,10 @@ int main()
                 orangeToggle = !orangeToggle;
 
                 // Save it to the mat
-                faceScans[1] = img(ROI);
+                // Clone the frame first, otherwise it uses the same image for each scan and overwrites it
+                Mat orange = img.clone();
+
+                faceScans[1] = orange(ROI);
             }
         }
 
@@ -83,7 +89,10 @@ int main()
                 blueToggle = !blueToggle;
 
                 // Save it to the mat
-                faceScans[2] = img(ROI);
+                // Clone the frame first, otherwise it uses the same image for each scan and overwrites it
+                Mat blue = img.clone();
+
+                faceScans[2] = blue(ROI);
             }
         }
 
@@ -96,7 +105,10 @@ int main()
                 redToggle = !redToggle;
 
                 // Save it to the mat
-                faceScans[3] = img(ROI);
+                // Clone the frame first, otherwise it uses the same image for each scan and overwrites it
+                Mat red = img.clone();
+
+                faceScans[3] = red(ROI);
             }
         }
 
@@ -109,7 +121,10 @@ int main()
                 greenToggle = !greenToggle;
 
                 // Save it to the mat
-                faceScans[4] = img(ROI);
+                // Clone the frame first, otherwise it uses the same image for each scan and overwrites it
+                Mat green = img.clone();
+
+                faceScans[4] = green(ROI);
             }
         }
 
@@ -122,7 +137,10 @@ int main()
                 whiteToggle = !whiteToggle;
 
                 // Save it to the mat
-                faceScans[5] = img(ROI);
+                // Clone the frame first, otherwise it uses the same image for each scan and overwrites it
+                Mat white = img.clone();
+
+                faceScans[5] = white(ROI);
 
                 // Now all the sides are scanned so now do some logic
                 scanCube();
@@ -130,18 +148,18 @@ int main()
         }
 
         // Print the cube array
-//        for (size_t i = 0; i < cube.size(); ++i)
-//        {
-//            for (size_t j = 0; j < cube[0].size(); ++j)
-//            {
-//                for (size_t k = 0; k < cube[0][0].size(); ++k)
-//                {
-//                    cout << cube[i][j][k] << ", ";
-//                }
-//            }
-//            cout << endl;
-//        }
-//        cout << endl;
+        for (size_t i = 0; i < cube.size(); ++i)
+        {
+            for (size_t j = 0; j < cube[0].size(); ++j)
+            {
+                for (size_t k = 0; k < cube[0][0].size(); ++k)
+                {
+                    cout << cube[i][j][k] << ", ";
+                }
+            }
+            cout << endl;
+        }
+        cout << endl;
 
         imshow("Frame", img);
 
@@ -154,11 +172,6 @@ void scanCube()
 {
     // Now loop over all nine points for each color
 
-    for (int i = 0; i < 6; ++i) {
-        imshow(to_string(i), faceScans[i]);
-        cout << faceScans[i];
-    }
-    
     // Pre-processing of images
 
     Mat kernel = getStructuringElement(MORPH_ELLIPSE, Size(6, 6));
