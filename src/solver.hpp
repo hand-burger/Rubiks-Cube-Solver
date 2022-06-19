@@ -158,7 +158,6 @@ int solveCube(array<array<array<int, 3>, 3>, 6> cubeInput)
         {
             cout << endl << "Invalid scan, please try again. The cube is either already solved or cannot be solved." << endl;
             return 0;
-            cube = copyOfCube;
         }
     }
     else
@@ -1441,33 +1440,44 @@ void solveWhiteSide()
 
 void positionWhiteCorners()
 {
-    // Store the
+    // Stores the number of times the bottom face is turned
     int dTurns[4];
 
+    // Stores the lowest number of bottom turns
     int bestNumDTurns = 0;
+
+    // Stores the position of the corners
     int pos1 = -1;
     int pos2 = -1;
 
+    // Loop over each corner
     for (int i = 0; i < 4; i++)
     {
+        // Get the number of corners that already good
         dTurns[i] = numCorrectCorners();
 
+        // If all the corners are good,
         if (dTurns[i] == 4)
         {
+            // Then break
             pos1 = 4;
             bestNumDTurns = i;
             break;
         }
+        // Otherwise, if the number of turns is less than 4
         else if (dTurns[i] < 4 && dTurns[i] > -1)
         {
+            // If the corner hasn't been moved yet
             if (pos2 == -1)
             {
                 pos1 = dTurns[i];
                 bestNumDTurns = i;
             }
         }
+        // Otherwise, if the number of turns is more than 4
         else if (dTurns[i] > 4)
         {
+            // Get the side of the corner
             int side1 = dTurns[i] % 10 + 1;
             int side2 = (int)(dTurns[i] / 10) + 1;
 
@@ -1478,6 +1488,7 @@ void positionWhiteCorners()
                 pos2 = side2;
                 bestNumDTurns = i;
             }
+            // Otherwise, if the corners are on the same side
             else if (pos2 == -1)
             {
                 pos1 = side1;
@@ -1485,9 +1496,11 @@ void positionWhiteCorners()
                 bestNumDTurns = i;
             }
         }
+        // Now shift over a position and do it again
         d();
     }
 
+    // Now with the best number of turns, perform them as long as they are not already in the correct position
     for (int i = 0; i < bestNumDTurns && pos1 != 4; i++)
     {
         d();
@@ -1495,12 +1508,15 @@ void positionWhiteCorners()
 
     // Now actually position the corners
 
+    // If all corners are good, then do nothing
     if (pos1 == 4)
     {
         return;
     }
+    // If the corners are beside each other
     else if (pos2 != -1 && (pos2 == (pos1 + 1) || pos1 == (pos2 + 1) || (pos2 == 4 && pos1 == 1) || (pos2 == 1 && pos1 == 4)))
     {
+
         int oppFace = pos2 + 3;
 
         if (oppFace > 4)
@@ -1508,12 +1524,15 @@ void positionWhiteCorners()
             oppFace -= 4;
         }
 
+        // Swap the corners, then fix it again
         swapCorners(oppFace);
         positionWhiteCorners();
         return;
     }
+    // If the corners are on the same side
     else if (pos2 != -1)
     {
+        // Get the side of the corner
         int face = pos1 + 4;
 
         if (face > 4)
@@ -1521,11 +1540,14 @@ void positionWhiteCorners()
             face -= 4;
         }
 
+        // Get the second corner
         int face2 = face + 1;
         if (face2 > 4)
         {
             face2 -= 4;
         }
+
+        // Swap the corners, then fix it again
 
         swapCorners(face);
         swapCorners(face2);
@@ -1533,6 +1555,7 @@ void positionWhiteCorners()
         positionWhiteCorners();
         return;
     }
+    // If the corners are not in the correct position
     else
     {
         int face = pos1 + 2;
@@ -1542,6 +1565,7 @@ void positionWhiteCorners()
             face -= 4;
         }
 
+        // Swap the corners, then fix it again
         swapCorners(face);
         positionWhiteCorners();
         return;
@@ -1549,29 +1573,41 @@ void positionWhiteCorners()
 
 }
 
+// Returns the number of corners that are in the correct position
 int numCorrectCorners()
 {
+    // Stores the color of the corners
     int cornerColors[3];
+
+    // The sides of the corners
     int side1 = 0;
     int side2 = 0;
 
+    // Stores the number of corners that are in the correct position
     int count = 0;
 
     int colorsMatch = 0;
+
+    // Position of the corner
     int position[4] = { -1, -1, -1, -1 };
 
+    // Loop over each corner position
     for (int i = 0; i < 4; i++)
     {
+        // Get the corner
         getCorner(i, cornerColors);
 
+        // Get the side of the corners
         side1 = i + 1;
         side2 = i + 2;
 
+        // If the side of the corner goes over 4, then it goes back to 1
         if (side2 == 5)
         {
             side2 = 1;
         }
 
+        // If the corner is in the correct color position
         for (int j = 0; j < 3; j++)
         {
             if (cornerColors[j] == side1 || cornerColors[j] == side2)
@@ -1581,24 +1617,30 @@ int numCorrectCorners()
 
         }
 
+        // If the corner is in the correct position
         if (colorsMatch == 2)
         {
+            // Store the position and increment the count
             position[i] = 1;
             count++;
         }
 
+        // Reset the colorsMatch
         colorsMatch = 0;
     }
 
     int pos = 0;
     int multiplier = 1;
 
+    // If all the corners are in the correct position
     if (count == 4)
     {
         return 4;
     }
+    // If theres one or two corners in the correct position
     else if (count == 2 || count == 1)
     {
+        // Loop over each corner position
         for (int i = 0; i < 4; i++)
         {
             if (position[i] == 1)
@@ -1609,11 +1651,13 @@ int numCorrectCorners()
 
         }
     }
+    // If only three corners are good, something is wrong.
     else
     {
         pos = -1;
     }
 
+    // Return the position
     return pos;
 }
 
@@ -1678,27 +1722,29 @@ void swapCorners(int face)
     }
 }
 
-void getCorner(int num, int corners[])
+// Get corner
+void getCorner(int pos, int corners[])
 {
-    if (num == 0)
+    // Check each corner position and store each corner in the corners array
+    if (pos == 0)
     {
         corners[0] = cube[1][2][2];
         corners[1] = cube[2][2][0];
         corners[2] = cube[5][0][0];
     }
-    else if (num == 1)
+    else if (pos == 1)
     {
         corners[0] = cube[2][2][2];
         corners[1] = cube[3][2][0];
         corners[2] = cube[5][0][2];
     }
-    else if (num == 2)
+    else if (pos == 2)
     {
         corners[0] = cube[3][2][2];
         corners[1] = cube[4][2][0];
         corners[2] = cube[5][2][2];
     }
-    else if (num == 3)
+    else if (pos == 3)
     {
         corners[0] = cube[4][2][2];
         corners[1] = cube[1][2][0];
@@ -1711,9 +1757,12 @@ void positionWhiteEdges()
     // Get the number of correct edges
     int pos = numCorrectEdges();
 
+    // If no edges are correct
     if (pos == 0)
     {
+        // Switch it around
         rotateEdges(2, true);
+        // Then try again
         positionWhiteEdges();
         return;
     }
@@ -1737,8 +1786,10 @@ void positionWhiteEdges()
     }
 }
 
+// Returns the number of edges that are in the correct position
 int numCorrectEdges()
 {
+    // Edge positions
     int edges[4][2] = { { cube[5][1][0], cube[1][2][1] },{ cube[5][0][1], cube[2][2][1] },{ cube[5][1][2], cube[3][2][1] },{ cube[5][2][1], cube[4][2][1] } };
 
     int correctPos = -1;
@@ -1746,10 +1797,12 @@ int numCorrectEdges()
     bool isOneCorrect = false;
     int positions[4];
 
+    // Loop over each edge position
     for (int i = 1; i <= 4; i++)
     {
         for (int j = 0; j < 2; j++)
         {
+            // If the edge is in the correct position
             if (edges[i - 1][j] == i)
             {
                 isOneCorrect = true;
@@ -1757,6 +1810,7 @@ int numCorrectEdges()
                 numCorrect++;
             }
 
+            // If the edge is not in the correct position
             if (edges[i - 1][j] != 5)
             {
                 positions[i - 1] = edges[i - 1][j];
@@ -1764,15 +1818,18 @@ int numCorrectEdges()
         }
     }
 
+    // If all the edges are in the correct position
     if (numCorrect == 4)
     {
         return 5;
     }
 
+    // If not one edge is in the correct position
     if (!isOneCorrect)
     {
         return 0;
     }
+    // Otherwise,
     else
     {
         bool clockwise = false;
@@ -1841,8 +1898,10 @@ int numCorrectEdges()
     return correctPos;
 }
 
+// Rotate the edges
 void rotateEdges(int face, bool rotClockwise)
 {
+    // Uses the face and if the rotation is clockwise or not to rotate the edges with pre defined moves
     if (face == 1)
     {
         if (rotClockwise)
@@ -1979,30 +2038,39 @@ void rotateEdges(int face, bool rotClockwise)
 
 void solveWhiteCorners()
 {
+    // Get the corner orientations
     int result = cornerOrientation();
 
+    // If the corners are not in the correct orientation
     while (result != 5)
     {
+        // Rotate the corners
         twoCornerRotate(abs(findBestFace(result)), findBestFace(result) > 0);
 
+        // Get the corner orientations again
         result = cornerOrientation();
     }
 }
 
 int cornerOrientation()
 {
+    // The number of correct edges
     int numCorrect = 0;
+    // The positions of the edges in the wrong position
     int wrongPosition = 0;
 
+    // Position of the corners
     int corners[4] = { cube[5][0][0], cube[5][0][2], cube[5][2][2], cube[5][2][0] };
 
     // Loop over and check if the corners are in the correct position
     for (int i = 0; i < 4; i++)
     {
+        // If the corner is white, it's good
         if (corners[i] == 5)
         {
             numCorrect++;
         }
+        // Otherwise, it is not white and so the position is stored
         else
         {
             wrongPosition = i;
@@ -2015,13 +2083,16 @@ int cornerOrientation()
         return 5;
     }
 
+    // Return the position of the wrong corner
     return wrongPosition;
 }
 
 int findBestFace(int cornerNum)
 {
+    // Position of the corners
     int corners[4] = { cube[5][0][0], cube[5][0][2], cube[5][2][2], cube[5][2][0] };
 
+    // Corners around
     int corner1 = cornerNum + 1;
     int corner2 = cornerNum - 1;
 
@@ -2083,8 +2154,10 @@ int findBestFace(int cornerNum)
     }
 }
 
+// Rotate the corners to the correct position
 void twoCornerRotate(int face, bool goForward)
 {
+    // Uses the face and if it goes forward with pre defined moves to rotate the corners
     if (face == 1)
     {
         if (goForward)
@@ -2250,8 +2323,10 @@ void solveWhiteEdges()
     int pos2 = -1;
     int j = 0;
 
+    // Loop over each face
     for (int i = 0; i < 5; i++)
     {
+        // Check if each edge is in the correct position
         j = i;
 
         if (i == 4)
@@ -2259,9 +2334,13 @@ void solveWhiteEdges()
             j = 0;
         }
 
+        // If the edge is not on the white side
         if (edges[j] != 5)
         {
+            // It is wrong
             numWrong++;
+
+            // If it isn't the first wrong edge
             if (!isStart)
             {
                 pos1 = j;
@@ -2279,6 +2358,8 @@ void solveWhiteEdges()
         }
     }
 
+    // If the edges are in the wrong position
+    // Move them around to the correct position
     if (numWrong >= 4)
     {
         twoEdgeRotate(1, false);
@@ -2552,15 +2633,15 @@ void printCube()
 void betterPrint()
 {
     /*
-    0 0 0
-    0 0 0
-    0 0 0
+                0 0 0
+                0 0 0
+                0 0 0
     4 4 4 3 3 3 2 2 2 1 1 1
     4 4 4 3 3 3 2 2 2 1 1 1
     4 4 4 3 3 3 2 2 2 1 1 1
-    5 5 5
-    5 5 5
-    5 5 5
+                5 5 5
+                5 5 5
+                5 5 5
     */
 
     // Print the top section
