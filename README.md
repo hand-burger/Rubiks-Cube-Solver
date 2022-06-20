@@ -127,7 +127,7 @@ solveCube(cube);
 
 ## Demonstration
 
-<img alt="Demonstration of scanner" src="scannerDemo.png">
+<img alt="Demonstration of scanner" src="img/scannerDemo.png">
 
 # Cube Solver
 
@@ -651,7 +651,7 @@ Finally, a solved Rubik's Cube is output with a list of moves to perform for the
             5 5 5
             5 5 5
             5 5 5
-            
+
 R L BI RI R UI R L LI BI DI RI U U LI RI FI UI 
 Solving yellow edges
 U U F F U U 
