@@ -127,7 +127,7 @@ solveCube(cube);
 
 ## Demonstration
 
-<img alt="Demonstration of scanner" src="img/scannerDemo.png">
+<img alt="Demonstration of scanner" src="src/img/scannerDemo.png">
 
 # Cube Solver
 
