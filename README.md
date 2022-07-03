@@ -5,6 +5,12 @@
 
 # Cube Scanner
 
+## Demonstration
+
+<img alt="Demonstration of scanner" src="src/img/scannerDemo.png"><br>
+
+### Show the camera each side of a Rubik's cube, and it'll tell you how to solve it!
+
 ## How it works
 
 First each face of the Rubik's Cube is scanned.
@@ -124,10 +130,6 @@ for (int i = 0; i < 6; i++)
 // Now the cube is scanned and the cube array is filled with numbers that are not -1 (Hopefully)
 solveCube(cube);
 ```
-
-## Demonstration
-
-<img alt="Demonstration of scanner" src="src/img/scannerDemo.png">
 
 # Cube Solver
 
